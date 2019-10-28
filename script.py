@@ -23,21 +23,22 @@ def process_barcodes(file_name, key_ind):
     unused_barcodes = 0
     barcodes_set = set()
     duplicated_barcodes = []
-    with open(file_name, 'rt') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader, None)
-        for barcode in reader:
-            if not barcode[1]:
-                unused_barcodes += 1
-                continue
-            barcode_id, order_id = barcode
-            if barcode_id in barcodes_set:
-                duplicated_barcodes.append(barcode_id)
-                continue
-            barcodes_set.add(barcode_id)
-            if not order_id in res:
-                res[order_id] = []
-            res[order_id].append(barcode_id)
+    csvfile = open(file_name, 'rt')
+    reader = csv.reader(csvfile)
+    next(reader, None)
+    for barcode in reader:
+        if not barcode[1]:
+            unused_barcodes += 1
+            continue
+        barcode_id, order_id = barcode
+        if barcode_id in barcodes_set:
+            duplicated_barcodes.append(barcode_id)
+            continue
+        barcodes_set.add(barcode_id)
+        if not order_id in res:
+            res[order_id] = []
+        res[order_id].append(barcode_id)
+    csvfile.close()
     return [res, unused_barcodes, duplicated_barcodes]
 
 def get_order_csv_str(customer_id, order_id, barcodes):
